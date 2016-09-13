@@ -1,0 +1,20 @@
+<section class="b_menu {{CONFIG.SHOWMENU?'':'active'}}">
+  <ul class="sidebar-menu">
+    <li v-for="one in list" v-gesture:tap.stop.prevent="click_menu_list(one)" >
+      <a v-bind:class="active==one.id?'active':''">
+        <i class="fa" v-bind:class="one.icon"></i>
+        <span>{{one.text}}</span>
+        <i class="fa pull-right {{showIndex==one.id?'fa-angle-down':'fa-angle-left'}}" v-show="one.children.length"></i>
+      </a>
+      <ul v-bind:class="showIndex==one.id?'':'hidden'">
+        <li v-for="child in one.children" v-gesture:tap.stop.prevent="click_menu_list(child)">
+          <a v-bind:class="active==child.id?'active':''">
+            <i class="fa" v-bind:class="child.icon"></i>
+            <span>{{child.text}}</span>
+            <i class="fa fa-angle-left pull-right" v-show="child.children.length"></i>
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</section>

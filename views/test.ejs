@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%=typeof title == 'undefined' ? 'New Sails App' : title%></title>
+
+    <!-- Viewport mobile tag for sensible mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+    <!--
+        Stylesheets and Preprocessors
+        ==============================
+
+        You can always bring in CSS files manually with `<link>` tags, or asynchronously
+        using a solution like AMD (RequireJS).  Or, if you like, you can take advantage
+        of Sails' conventional asset pipeline (boilerplate Gruntfile).
+
+        By default, stylesheets from your `assets/styles` folder are included
+        here automatically (between STYLES and STYLES END). Both CSS (.css) and LESS (.less)
+        are supported. In production, your styles will be minified and concatenated into
+        a single file.
+
+        To customize any part of the built-in behavior, just edit `tasks/pipeline.js`.
+        For example, here are a few things you could do:
+
+            + Change the order of your CSS files
+            + Import stylesheets from other directories
+            + Use a different or additional preprocessor, like SASS, SCSS or Stylus
+    -->
+
+    <!--STYLES-->
+    <link rel="stylesheet" href="/styles/importer.css">
+    <!--STYLES END-->
+  </head>
+
+  <body>
+
+  <div id="topics">
+    <div class="post">
+      <h1 class="postTitle">
+        <a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/mind/archive/2012/04/01/2198995.html">浅析CSS——元素重叠及position定位的z-index顺序</a>
+      </h1>
+      <div class="clear"></div>
+      <div class="postBody">
+        <div id="cnblogs_post_body"><p><img src="http://pic002.cnblogs.com/images/2012/332068/2012040114074097.jpg" alt=""></p>
+          <p>&nbsp;</p>
+          <p>多次在项目中遇到html页面元素的非期待重叠错误，多数还是position定位情况下z-index的问题。其实每次解决类似问题思路大致都是一样的，说到底还是对z-index的理解比较模糊，可以解决问题却不大了解其原因，导致重复出错......于是决定把重叠问题弄清下，把z-index理顺下。</p>
+          <p>经过一番查找对比实践理解，下面就从元素重叠的背景常识及可能原因说起，浅谈下position定位元素的z-index顺序。总结下我目前的理解，希望也能对遇到过类似问题有同样疑惑的你有一点帮助或启发。</p>
+          <p>&nbsp;</p>
+          <h3>元素位置重叠的背景常识</h3>
+          <p>(x)html文档中的元素默认处于普通流（normal flow）中，也就是说其顺序由元素在文档中的先后位置决定，此时一般不会产生重叠（但指定负边距可能产生重叠）。当我们用css为某个元素指定float浮动或者position定位后，元素的定位将会依情况发生如下改变：</p>
+          <p class="tit">1. 指定float值left/right</p>
+          <p>行内元素也会隐形变成块元素，元素会脱离文档的普通流，向左或右浮动，直到其外边缘碰到包含框或另一个浮动框。</p>
+          <p class="tit">2. 指定position值relative</p>
+          <p>可以相对于其在普通流中的位置偏移，原本所占的空间仍保留。</p>
+          <p class="tit">3. 指定position值absolute</p>
+          <p>行内元素也会隐形变成块元素，元素会脱离文档的普通流，相对于最近的已定位祖先元素偏移，如果元素没有已定位的祖先元素，那么它的位置相对于最初的包含块偏移。</p>
+          <p class="tit">4. 指定position值fixed</p>
+          <p>元素会脱离文档的普通流，相对于浏览器窗口偏移，固定在浏览器的某个位置。</p>
+          <p>以上四种情况下，文档中的元素都将可能被浮动/定位元素覆盖产生重叠。</p>
+          <p>&nbsp;</p>
+          <h3>元素位置重叠的可能原因</h3>
+          <p class="tit">1. 负边距/float浮动</p>
+          <p>margin为负值时元素会依参考线向外偏移。margin-left/margin-top的参考线为左边的元素/上面的元素（如无兄弟元素则为父元素的左内侧/上内侧）,margin-right和margin-bottom的参考线为元素本身的border右侧/border下侧。一般可以利用负边距来就行布局，但没有计算好的话就可能造成元素重叠。堆叠顺序由元素在文档中的先后位置决定，后出现的会在上面。</p>
+          <p>浮动元素会脱离文档的普通流，有可能覆盖或遮挡掉文档中的元素。</p>
+          <p class="tit">2. position的relative/absolute/fixed定位</p>
+          <p>当为元素设置position值为relative/absolute/fixed后，元素发生的偏移可能产生重叠，且z-index属性被激活。z-index值可以控制定位元素在垂直于显示屏方向（Z 轴）上的堆叠顺序（stack order），值大的元素发生重叠时会在值小的元素上面。</p>
+          <p class="tit">3. window窗口元素引发的重叠</p>
+          <p>浏览器解析页面时，先判断元素的类型：窗口元素优于非窗口元素显示（也就是窗口元素会覆盖在其它非窗口元素之上），同为非窗口类型才能在激活z-index属性控制堆叠顺序。</p>
+          <p><span style="color: #399ab2;"><strong>Flash元素属于window窗口元素</strong></span></p>
+          <p>所以如果页面上flash元素和其他元素发生重叠，需要先将flash嵌入的wmode属性的window（窗口，默认的会造成上面所说的问题）改为非窗口模式：opaque（非窗口不透明）或者 transparent（非窗口透明）。</p>
+          <p><span style="color: #399ab2;"><strong>ie6下select属于window类型控件</strong></span></p>
+          <p>同理，它也产生窗口元素的遮挡问题。解决方法使用iframe（原理：ie6下普通元素无法覆盖select，iframe可以覆盖select，普通元素可以覆盖iframe）/用div模拟实现select的效果。我一般会为被select遮挡的div在内部追加（appendChild）一个空的子iframe，设置position:absolute脱离文档流空间、width:100%;height:100%;覆盖整个父div、z-index:-1;确保值要小于父div的z-index值让父div覆盖显示在iframe上面，借助这个iframe来覆盖select。</p>
+          <p>&nbsp;</p>
+          <h3>浅说position定位及z-index使用</h3>
+          <p class="tit">使用前提</p>
+          <p>z-index只能在position属性值为relative或absolute或fixed的元素上有效。</p>
+          <p class="tit">基本原理</p>
+          <p>z-index值可以控制定位元素在垂直于显示屏方向（Z 轴）上的堆叠顺序（stack order），值大的元素发生重叠时会在值小的元素上面。</p>
+          <p class="tit">使用的相对性</p>
+          <p>z-index值只决定同一父元素中的同级子元素的堆叠顺序。父元素的z-index值（如果有）为子元素定义了堆叠顺序（css版堆叠“拼爹”）。向上追溯找不到含有z-index值的父元素的情况下，则可以视为自由的z-index元素，它可以与父元素的同级兄弟定位元素或其他自由的定位元素来比较z-index的值，决定其堆叠顺序。同级元素的z-index值如果相同，则堆叠顺序由元素在文档中的先后位置决定，后出现的会在上面。</p>
+          <p>所以如果当你发现一个z-index值较大的元素被值较小的元素遮挡了，请先检查它们之间的dom结点关系，多半是因为其父结点含有激活并设置了z-index值的position定位元素。</p>
+          <p>也因为这个相对性，还会引发浏览器表现不一致出现<span style="color: #399ab2;"><strong>兼容问题</strong></span>。原因是ie6、7下面position值为非static的元素在未设置z-index值的情况下都会被隐含添加z-index:0，而Firefox/Chrome等现代浏览器会遵循标准默认z-index:auto不会产生值。</p>
+          <p>还有一点需要注意，负值的z-index也依照大小比较的原理，但一般来说负值的z-index会被透明的body覆盖导致点击等事件响应出现问题，请谨慎使用。</p>
+          <p class="tit">百说不如一例，举个例子来简单说明下z-index</p>
+          <div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="//common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div><span class="lan">html代码</span>
+            <pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="pr"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="one"</span><span style="color: #0000ff;">&gt;</span><br>    #one相对定位<br>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="pa pa1"</span><span style="color: #0000ff;">&gt;</span>#one的子元素pa1，相对#one绝对定位，#one是它的父元素，与.pa2为同级兄弟元素<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="pa pa2"</span><span style="color: #0000ff;">&gt;</span>#one的子元素pa2，相对#one绝对定位，#one是它的父元素，与.pa1为同级兄弟元素<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><br><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="pa"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="two"</span><span style="color: #0000ff;">&gt;</span>#two绝对定位，与#one为同级元素<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+            <div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="//common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div></div>
+          <p class="tit">默认</p>
+          <p>均未加z-index值</p>
+          <div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="//common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div><span class="lan">css代码</span>
+            <pre><span style="color: #800000;">.pr</span>{<span style="color: #ff0000;">position</span>:<span style="color: #0000ff;">relative</span>;}<span style="color: #800000;"><br>.pa</span>{<span style="color: #ff0000;">position</span>:<span style="color: #0000ff;">absolute</span>;}<span style="color: #800000;"><br>div</span>{<span style="color: #ff0000;">width</span>:<span style="color: #0000ff;">200px</span>;<span style="color: #ff0000;">height</span>:<span style="color: #0000ff;">200px</span>;<span style="color: #ff0000;">border</span>:<span style="color: #0000ff;">1px solid #ccc</span>;<span style="color: #ff0000;">color</span>:<span style="color: #0000ff;">#fff</span>;<span style="color: #ff0000;">font</span>:<span style="color: #0000ff;">bold 14px \5fae\8f6f\96c5\9ed1</span>;}<span style="color: #800000;"><br>#one</span>{<span style="color: #ff0000;">background</span>:<span style="color: #0000ff;">#39f</span>;}<span style="color: #800000;"><br>#one .pa1</span>{<span style="color: #ff0000;">background</span>:<span style="color: #0000ff;">#096</span>;<span style="color: #ff0000;">top</span>:<span style="color: #0000ff;">25px</span>;<span style="color: #ff0000;">left</span>:<span style="color: #0000ff;">20px</span>;}<span style="color: #800000;"><br>#one .pa2</span>{<span style="color: #ff0000;">background</span>:<span style="color: #0000ff;">#969</span>;<span style="color: #ff0000;">top</span>:<span style="color: #0000ff;">90px</span>;<span style="color: #ff0000;">left</span>:<span style="color: #0000ff;">40px</span>;}<span style="color: #800000;"><br>#two</span>{<span style="color: #ff0000;">background</span>:<span style="color: #0000ff;">#669</span>;<span style="color: #ff0000;">top</span>:<span style="color: #0000ff;">165px</span>;<span style="color: #ff0000;">left</span>:<span style="color: #0000ff;">70px</span>;}</pre>
+            <div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="//common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div></div>
+          <p class="tit">表现及解析</p>
+          <p>定位后依照元素在文档中的先后位置，后出现的会在上面。</p>
+          <p><img src="http://pic002.cnblogs.com/images/2012/332068/2012040113460968.png" alt=""></p>
+          <p class="tit">相对性试验</p>
+          <p>为#one加上z-index:1;#one .pa1加上z-index:30;#one .pa2加上z-index:20;#two加上z-index:9;</p>
+          <div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="//common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div><span class="lan">css代码</span>
+            <pre><span style="color: #800000;">.pr</span>{<span style="color: #ff0000;">position</span>:<span style="color: #0000ff;">relative</span>;}<span style="color: #800000;"><br>.pa</span>{<span style="color: #ff0000;">position</span>:<span style="color: #0000ff;">absolute</span>;}<span style="color: #800000;"><br>div</span>{<span style="color: #ff0000;">width</span>:<span style="color: #0000ff;">200px</span>;<span style="color: #ff0000;">height</span>:<span style="color: #0000ff;">200px</span>;<span style="color: #ff0000;">border</span>:<span style="color: #0000ff;">1px solid #ccc</span>;<span style="color: #ff0000;">color</span>:<span style="color: #0000ff;">#fff</span>;<span style="color: #ff0000;">font</span>:<span style="color: #0000ff;">bold 14px \5fae\8f6f\96c5\9ed1</span>;}<span style="color: #800000;"><br>#one</span>{<span style="color: #ff0000;">background</span>:<span style="color: #0000ff;">#39f</span>;<span style="color: #ff0000;"> z-index</span>:<span style="color: #0000ff;">1</span>;}<span style="color: #800000;"><br>#one .pa1</span>{<span style="color: #ff0000;">background</span>:<span style="color: #0000ff;">#096</span>;<span style="color: #ff0000;">top</span>:<span style="color: #0000ff;">25px</span>;<span style="color: #ff0000;">left</span>:<span style="color: #0000ff;">20px</span>;<span style="color: #ff0000;"> z-index</span>:<span style="color: #0000ff;">30</span>;}<span style="color: #800000;"><br>#one .pa2</span>{<span style="color: #ff0000;">background</span>:<span style="color: #0000ff;">#969</span>;<span style="color: #ff0000;">top</span>:<span style="color: #0000ff;">90px</span>;<span style="color: #ff0000;">left</span>:<span style="color: #0000ff;">40px</span>;<span style="color: #ff0000;"> z-index</span>:<span style="color: #0000ff;">20</span>;}<span style="color: #800000;"><br>#two</span>{<span style="color: #ff0000;">background</span>:<span style="color: #0000ff;">#669</span>;<span style="color: #ff0000;">top</span>:<span style="color: #0000ff;">165px</span>;<span style="color: #ff0000;">left</span>:<span style="color: #0000ff;">70px</span>;<span style="color: #ff0000;"> z-index</span>:<span style="color: #0000ff;">9</span>;}</pre>
+            <div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="//common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div></div>
+          <p class="tit">表现及解析</p>
+          <p>因为父辈同级元素的z-index值#one&lt;#two，所以#one决定了其子元素.pa1和.pa2的z-index值不论有多大都会被#two所覆盖；作为同级兄弟元素的.pa1和.pa2则比较其z-index值，较大的.pa1显示在上面。</p>
+          <p><img src="http://pic002.cnblogs.com/images/2012/332068/2012040114434229.jpg" alt=""></p>
+          <p class="tit">ie6、7兼容性试验</p>
+          <p>为#one .pa1加上z-index:10;#two加上z-index:1;</p>
+          <div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="//common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div><span class="lan">css代码</span>
+            <pre><span style="color: #800000;">.pr</span>{<span style="color: #ff0000;">position</span>:<span style="color: #0000ff;">relative</span>;}<span style="color: #800000;"><br>.pa</span>{<span style="color: #ff0000;">position</span>:<span style="color: #0000ff;">absolute</span>;}<span style="color: #800000;"><br>div</span>{<span style="color: #ff0000;">width</span>:<span style="color: #0000ff;">200px</span>;<span style="color: #ff0000;">height</span>:<span style="color: #0000ff;">200px</span>;<span style="color: #ff0000;">border</span>:<span style="color: #0000ff;">1px solid #ccc</span>;<span style="color: #ff0000;">color</span>:<span style="color: #0000ff;">#fff</span>;<span style="color: #ff0000;">font</span>:<span style="color: #0000ff;">bold 14px \5fae\8f6f\96c5\9ed1</span>;}<span style="color: #800000;"><br>#one</span>{<span style="color: #ff0000;">background</span>:<span style="color: #0000ff;">#39f</span>;}<span style="color: #800000;"><br>#one .pa1</span>{<span style="color: #ff0000;">background</span>:<span style="color: #0000ff;">#096</span>;<span style="color: #ff0000;">top</span>:<span style="color: #0000ff;">25px</span>;<span style="color: #ff0000;">left</span>:<span style="color: #0000ff;">20px</span>;<span style="color: #ff0000;"> z-index</span>:<span style="color: #0000ff;">10</span>;}<span style="color: #800000;"><br>#one .pa2</span>{<span style="color: #ff0000;">background</span>:<span style="color: #0000ff;">#969</span>;<span style="color: #ff0000;">top</span>:<span style="color: #0000ff;">90px</span>;<span style="color: #ff0000;">left</span>:<span style="color: #0000ff;">40px</span>;}<span style="color: #800000;"><br>#two</span>{<span style="color: #ff0000;">background</span>:<span style="color: #0000ff;">#669</span>;<span style="color: #ff0000;">top</span>:<span style="color: #0000ff;">165px</span>;<span style="color: #ff0000;">left</span>:<span style="color: #0000ff;">70px</span>;<span style="color: #ff0000;">z-index</span>:<span style="color: #0000ff;">1</span>;}</pre>
+            <div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="//common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div></div>
+          <p class="tit">表现及解析</p>
+          <p>Firefox/Chrome等现代浏览器（包括ie8+）下，父元素#one未设置z-index值，则默认为auto，此时的#one .pa1为自由的定位元素，因此z-index较大的#one .pa1显示在较小的#two上面。如果把#two的z-index值去掉，情况也会是一样的，设置了较大z-index值的#one .pa1会显示在未设置z-index的元素上面。</p>
+          <p>ie6/7下,差异在于#one .pa1显示在了#two的下面。因为对于ie6/7父元素#one未设置z-index值，会被隐含设置了z-index:0;此时z-index值#one的0要与#two的1比较，而#two比较大，所以#one的子元素无论z-index如何的大也会被#two遮挡。如果把#two的z-index值去掉，情况依旧，因为未设置z-index值的#one和#two都会被默认加上z-index:0;有了值就可以比较，值相同的情况下堆叠顺序由元素在文档中的先后位置决定，出现在后面的#two会在上面,结果#one的子元素无论z-index如何的大还是会被#two遮挡。</p>
+          <p><img src="http://pic002.cnblogs.com/images/2012/332068/2012040114524056.jpg" alt=""></p>
+          <p>&nbsp;</p>
+          <h3>简单总结及建议</h3>
+          <p>普通元素的堆叠顺序由元素在文档中的先后位置决定，后出现的会在上面，请小心计算好浮动和负边距布局，注意窗口元素的特殊性；非同级关系和非父子关系定位元素之间的堆叠顺序，要向上追溯到其为兄弟关系的父元素上，先比较其z-index值，只有父辈元素中的z-index值较大的后代子元素才能超过z-index值较小的父辈元素及其子孙元素。</p>
+          <p>为了在编码时就减少z-index值判断的复杂性，我建议对于一般页面内容类定位元素的z-index设置小于99的值（如非必要不使用负值），广告类定位元素的z-index设置100～500的值，公告提示等弹出类定位元素的z-index设置大于500的值；对于比较复杂定位嵌套页面，为了避免ie6/7的显示差异，请为父辈类定位元素显性加上z-index:0或其他值。</p>
+          <p>以上是我目前网络搜寻书籍参考结合实践后的理解总结，如有错误，请不吝赐教；如有疑问，欢迎讨论；如有帮助，万分荣幸；如有雷同，握个手吧～</p>
+          <p>&nbsp;</p></div><div id="MySignature"></div>
+        <div class="clear"></div>
+        <div id="blog_post_info_block">
+          <div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/mind/category/366079.html">前端开发</a></div>
+          <div id="EntryTag">标签: <a href="http://www.cnblogs.com/mind/tag/css/">css</a>, <a href="http://www.cnblogs.com/mind/tag/%E6%B5%85%E6%9E%90/">浅析</a></div>
+          <div id="blog_post_info"><div id="green_channel">
+              <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(2198995,cb_blogId,1);green_channel_success(this,'谢谢推荐！');">好文要顶</a>
+              <a id="green_channel_follow" onclick="follow('560babb4-0bde-e011-8ee0-842b2b196315');" href="javascript:void(0);">关注我</a>
+              <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+              <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="//common.cnblogs.com/images/icon_weibo_24.png" alt=""></a>
+              <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="//common.cnblogs.com/images/wechat.png" alt=""></a>
+            </div>
+            <div id="author_profile">
+              <div id="author_profile_info" class="author_profile_info">
+                <a href="http://home.cnblogs.com/u/mind/" target="_blank"><img src="//pic.cnblogs.com/face/sample_face.gif" class="author_avatar" alt=""></a>
+                <div id="author_profile_detail" class="author_profile_info">
+                  <a href="http://home.cnblogs.com/u/mind/">littleL</a><br>
+                  <a href="http://home.cnblogs.com/u/mind/followees">关注 - 0</a><br>
+                  <a href="http://home.cnblogs.com/u/mind/followers">粉丝 - 15</a>
+                </div>
+              </div>
+              <div class="clear"></div>
+              <div id="author_profile_honor"></div>
+              <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow('560babb4-0bde-e011-8ee0-842b2b196315');return false;">+加关注</a>
+              </div>
+            </div>
+            <div id="div_digg">
+              <div class="diggit" onclick="votePost(2198995,'Digg')">
+                <span class="diggnum" id="digg_count">17</span>
+              </div>
+              <div class="buryit" onclick="votePost(2198995,'Bury')">
+                <span class="burynum" id="bury_count">0</span>
+              </div>
+              <div class="clear"></div>
+              <div class="diggword" id="digg_tips">
+              </div>
+            </div>
+          </div>
+          <div class="clear"></div>
+          <div id="post_next_prev"><a href="http://www.cnblogs.com/mind/archive/2012/03/23/2411939.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/mind/archive/2012/03/23/2411939.html" title="发布于2012-03-23 14:01">简单返回顶部代码及注释说明</a><br></div>
+        </div>
+
+
+      </div>
+      <div class="postDesc">posted @ <span id="post-date">2012-04-01 18:49</span> <a href="http://www.cnblogs.com/mind/">littleL</a> 阅读(<span id="post_view_count">31885</span>) 评论(<span id="post_comment_count">2</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=2198995" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(2198995);return false;">收藏</a></div>
+    </div>
+    <script type="text/javascript">var allowComments=true,cb_blogId=97308,cb_entryId=2198995,cb_blogApp=currentBlogApp,cb_blogUserGuid='560babb4-0bde-e011-8ee0-842b2b196315',cb_entryCreatedDate='2012/4/1 18:49:00';loadViewCount(cb_entryId);</script>
+
+  </div>
+
+  </body>
+</html>

@@ -1,0 +1,256 @@
+/**
+ * importer.less
+ *
+ * By default, new Sails projects are configured to compile this file
+ * from LESS to CSS.  Unlike CSS files, LESS files are not compiled and
+ * included automatically unless they are imported below.
+ *
+ * The LESS files imported below are compiled and included in the order
+ * they are listed.  Mixins, variables, etc. should be imported first
+ * so that they can be accessed by subsequent LESS stylesheets.
+ *
+ * (Just like the rest of the asset pipeline bundled in Sails, you can
+ * always omit, customize, or replace this behavior with SASS, SCSS,
+ * or any other Grunt tasks you like.)
+ */
+
+
+
+// For example:
+//
+// @import 'variables/colors.less';
+// @import 'mixins/foo.less';
+// @import 'mixins/bar.less';
+// @import 'mixins/baz.less';
+//
+// @import 'styleguide.less';
+// @import 'pages/login.less';
+// @import 'pages/signup.less';
+//
+// etc.
+@import 'font-awesome.less';
+@import 'tool.less';
+
+html,body,ul{
+  margin: 0;
+  padding: 0;
+}
+li{
+  list-style: none;
+}
+html,body{
+  height: 100%;
+  background-color: #ecf0f5;
+  color: #555;
+}
+.hidden{
+  display: none;
+}
+.fl{float:left;}
+.fr{float:right;}
+.clear{clear:both;}
+
+@menu_width : 200px;
+@menu_s_width : 0px;
+@head_height : 50px;
+
+//head
+.b_header{
+  height:@head_height;
+  color:#fff;
+  background-color: #367fa9;
+  position: relative;
+  z-index: 1019;
+
+  .logo{
+    width:@menu_width;
+    line-height: @head_height;
+    padding:0 15px;
+    text-align:center;
+    box-sizing: border-box;
+    float:left;
+    position: absolute;
+  }
+  .nav{
+    height: @head_height;
+    line-height: @head_height;
+    margin-left:@menu_width;
+    position: relative;
+    transition:all .2s ease;
+    -webkit-transform: translate3d(0,0,0); /*开启硬件加速*/
+    -webkit-backface-visibility: hidden; /*元素旋转时隐藏背面*/
+    -webkit-transform-style: preserve-3d; /*保留3D空间*/
+    background-color: #3c8dbc;
+  }
+  .info{
+    padding: 0 10px;
+    display: inline-block;
+    float: right;
+  }
+
+  // active
+  &.active{
+    .logo{
+      display: none;
+    }
+    .nav{
+      margin-left:@menu_s_width;
+    }
+  }
+}
+// head-media
+@media (max-width: 768px){
+  .b_header{
+    // active
+    &.active{
+      .nav{
+        margin-left:0;
+      }
+    }
+  }
+}
+
+
+.b_body{
+  width: 100%;
+  height:100%;
+  padding-top:@head_height;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+
+  .b_menu{
+    width: @menu_width;
+    height: inherit;
+    display: inline-block;
+    padding-top:@head_height;
+    padding-bottom:50px;
+    box-sizing: border-box;
+    color: #d4d4d4;
+    background-color: #000;
+    transition:all .2s ease;
+    -webkit-transform: translate3d(0,0,0); /*开启硬件加速*/
+    -webkit-backface-visibility: hidden; /*元素旋转时隐藏背面*/
+    -webkit-transform-style: preserve-3d; /*保留3D空间*/
+    position: absolute;
+    top:0;
+    left:0;
+    z-index: 1011;
+    overflow-y: scroll;
+
+    .sidebar-menu{
+
+      li{
+        >a{
+          min-height: 14px;
+          padding: 15px 0;
+          position: relative;
+          border-left: 4px solid rgba(0,0,0,0);
+          cursor: pointer;
+          display: block;
+
+          &.active{
+            background-color: #505050;
+            border-left: 4px solid #367fa9;
+            color:#fff;
+          }
+          &:hover{
+            background-color: #505050;
+            border-left: 4px solid #367fa9;
+            color:#fff;
+          }
+
+          i{
+            width: 30px;
+            text-align: center;
+          }
+          span{
+            width: 100%;
+            padding: 0 40px 0 40px;
+            display: inline-block;
+            box-sizing: border-box;
+            word-wrap: normal;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: absolute;
+            left: 0;
+          }
+        }
+        >ul{
+          color: #a2a4a7;
+        }
+      }
+    }
+
+    // menu-active
+    &.active {
+      width: @menu_s_width;
+
+      .sidebar-menu {
+        li {
+          span {
+            display: none;
+          }
+          i:last-child {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  // menu-media
+  @media (max-width: 768px){
+    .b_menu{
+
+      // menu-active
+      &.active {
+        width: 0;
+
+        .sidebar-menu{
+          display: none;
+        }
+      }
+    }
+  }
+
+  // content
+  .b_content{
+    padding-left:@menu_width;
+    height: inherit;
+    overflow: scroll;
+
+    &.active{
+      padding-left:@menu_s_width;
+    }
+  }
+  .b_menu_mask{
+    width: 100%;
+    height: 100%;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1001;
+    background-color: rgba(0,0,0,.4);
+  }
+  // content-media
+  @media (max-width: 768px){
+    // content
+    .b_content{
+      padding-left:0;
+    }
+    // mask
+    .b_content:not(.active) > .b_menu_mask{
+      display: block;
+    }
+  }
+}
+
+
+
+
+#b_content_html{
+  padding: 10px;
+}

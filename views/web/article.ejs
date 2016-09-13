@@ -1,0 +1,61 @@
+<div class="menu_article">
+  <h2 class="title">所有模板</h2>
+  <div class="p_head">
+    <ul class="p_top">
+      <li>全部</li>
+      <li>已发布</li>
+      <li>草稿</li>
+      <li>垃圾箱</li>
+    </ul>
+    <div class="p_head_search">
+      <input type="text" class="form-input" />&nbsp;<span class="button">搜索</span>
+    </div>
+  </div>
+  <br/>
+  <table class="table">
+    <thead>
+    <tr>
+      <th class="checkbox"><input name="dataItem" v-gesture:tap="click_checkAll(this,$event)" type="checkbox" v-model="checkAllFlag"></th>
+      <th>标题</th>
+      <th>作者</th>
+      <th>分类</th>
+      <th>专题</th>
+      <th>发布时间</th>
+    </tr>
+    </thead>
+    <!--<tr>-->
+    <!--<td class="checkbox"><input name="dataItem" onclick="checkAll(this)" type="checkbox" value="0"></td>-->
+    <!--<td>2</td>-->
+    <!--<td>3</td>-->
+    <!--<td>4</td>-->
+    <!--<td>5</td>-->
+    <!--<td>6</td>-->
+    <!--</tr>-->
+    <tr v-for="one in list">
+      <td class="checkbox"><input name="dataItem" type="checkbox" v-model="one.checked" /></td>
+      <td>{{one.title}}</td>
+      <td>{{one.user_id}}</td>
+      <td>{{one.text}}</td>
+      <td>{{one.moudle}}</td>
+      <td>{{one.createdAt}}</td>
+    </tr>
+  </table>
+</div>
+
+<style>
+  .title{
+    padding:0 10px;
+  }
+  .p_head{
+    overflow: auto;
+  }
+  .p_head_search{
+    float:right;
+  }
+  .p_top li{
+    padding: 0 10px;
+    float: left;
+    border-right: 1px solid #cecece;
+    cursor:pointer;
+  }
+</style>

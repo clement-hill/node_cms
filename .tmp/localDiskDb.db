@@ -1,0 +1,61 @@
+{
+  "data": {
+    "content": [],
+    "jpress_content": [
+    ]
+  },
+  "schema": {
+    "content": {
+      "id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "text": {
+        "type": "string"
+      },
+      "created": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "jpress_content": {
+      "id": {
+        "type": "integer",
+        "unique": true,
+        "primaryKey": true
+      },
+      "title": {
+        "type": "string"
+      },
+      "text": {
+        "type": "string"
+      },
+      "user_id": {
+        "type": "string"
+      },
+      "moudle": {
+        "type": "string"
+      },
+      "created": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    }
+  },
+  "counters": {
+    "content": {},
+    "jpress_content": {}
+  }
+}
