@@ -3,6 +3,7 @@
   <div class="row col col-70 col-md">
     <div class="f_title">
       <input name="title"  class="form-control" placeholder="标题" v-model="data.title"/>
+      <input class="hidden" ng-modal="data.id">
     </div>
     <div class="f_editor">
       <script id="editor" type="text/plain" style="width:100%;height:180px;"></script>
@@ -74,7 +75,7 @@
     <div class="box btn_opr">
       <span class="button fl">移至垃圾箱</span>
       <span class="button btn-default fr">删除</span>&nbsp;
-      <span class="button btn-primary fr" v-gesture:tap.stop.prevent="postActicle()">发布</span>
+      <span class="button btn-primary fr" v-gesture:tap.stop.prevent="click_noteActicle()">发布</span>
     </div>
     <div class="box-panel col">
       <div class="panel">
@@ -123,6 +124,7 @@
   label .col{
     height: 34px;
     line-height: 34px;
+    float:left;
   }
   .tab-content{
     min-height: 150px;

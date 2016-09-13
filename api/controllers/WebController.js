@@ -5,4 +5,4 @@ module.exports = {
     var url = req.url.substr(1).replace(".html","");
     res.view(url,{layout:false});
   }
-}
+};

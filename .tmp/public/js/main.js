@@ -1,11 +1,3 @@
-function RS(res, callback) {
-  var body = res.body;
-  if (body.s == 0) {
-    callback(body.msg);
-  } else {
-    alert("error");
-  }
-};
 CONFIG = {
   SHOWMENU: true,
   VMCONTENT: void 0
@@ -38,7 +30,7 @@ define(function(require, exports, module) {
       showIndex: -1,
       active: -1,
       list: [
-        {id: 0, url: "article_add", text: "Jpress面板", icon: ""},
+        {id: 0, url: "article", text: "Jpress面板", icon: ""},
         {
           id: 1, text: "文章", icon: "fa-file-text-o", children: [
           {id: 10, url: "article", text: "所有文章", icon: ""},
@@ -118,12 +110,12 @@ define(function(require, exports, module) {
       ]
     },
     methods: {
-      click_menu_list: function (one) {
+      click_menu_list: function (one,paramData) {
         var _this = this;
         if (one.url) {
           _this.$data.active = one.id;
           var temp_url = "/web/" + one.url + ".html";
-          var js_url = "/js/common/"+one.url.split("_")[0];
+          var js_url = "/js/web/"+one.url.split("_")[0];
           seajs.use(js_url);
           _this.$http.get(temp_url).then(function (res) {// 加载内容
             if (CONFIG.VMCONTENT) {
@@ -134,7 +126,7 @@ define(function(require, exports, module) {
               template: res.body
             });
             document.getElementById("b_content_html").innerHTML = "";
-            CONFIG.VMCONTENT = myVmFn(myComponent);
+            CONFIG.VMCONTENT = myVmFn(myComponent,paramData);
             CONFIG.VMCONTENT.$mount().$appendTo('#b_content_html');
             CONFIG.VMCONTENT.$emit("afterEvent");
           });

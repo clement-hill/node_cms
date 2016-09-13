@@ -45,7 +45,7 @@ module.exports.connections = {
      host: '127.0.0.1',
      user: 'root', //optional
      password: '123456', //optional
-     database: 'jpress' //optional
+     database: 'cms' //optional
   }
 
   /***************************************************************************

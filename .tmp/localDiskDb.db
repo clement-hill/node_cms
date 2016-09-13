@@ -1,18 +1,31 @@
 {
   "data": {
-    "content": [],
-    "jpress_content": [
+    "jpress_content": [],
+    "content": [
+      {
+        "title": "测试",
+        "createdAt": "2016-09-13T00:40:01.855Z",
+        "updatedAt": "2016-09-13T00:40:01.855Z"
+      }
     ]
   },
   "schema": {
-    "content": {
+    "jpress_content": {
       "id": {
-        "type": "string"
+        "type": "integer",
+        "unique": true,
+        "primaryKey": true
       },
       "title": {
         "type": "string"
       },
       "text": {
+        "type": "string"
+      },
+      "user_id": {
+        "type": "string"
+      },
+      "moudle": {
         "type": "string"
       },
       "created": {
@@ -25,7 +38,7 @@
         "type": "datetime"
       }
     },
-    "jpress_content": {
+    "content": {
       "id": {
         "type": "integer",
         "unique": true,

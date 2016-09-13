@@ -8,7 +8,7 @@
 module.exports = {
   autoPK: true,
   tableName:"content",
-  connection:"someMysqlServer",
+  //connection:"someMysqlServer",
   attributes: {
     id:{
       type: 'integer',
@@ -19,7 +19,7 @@ module.exports = {
     // 内容
     text:"STRING",//
     user_id:"STRING",//作者
-    moudle:"STRING",//专题
+    module:"STRING",//专题
     created:"STRING" // 创建时间
   }
 };

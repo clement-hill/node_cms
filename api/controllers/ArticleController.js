@@ -22,7 +22,8 @@ module.exports = {
 
   },
   update:function(req,res){
-    JpressContent.update(req.body).exec(function(error,list){
+    var opr = req.body;
+    JpressContent.update(opr.id,opr).exec(function(error,list){
       if(error){
         res.send(Rs.bad(""));
       }else{
@@ -31,7 +32,16 @@ module.exports = {
     });
   },
   del:function(req,res){
-    res.send(Rs.ok(""));
+    var opr = req.param("id");
+    if(opr){
+      JpressContent.destroy({id:opr}).exec(function(error,list){
+        if(error){
+          res.send(Rs.bad(error));
+        }else{
+          res.send(Rs.ok(""));
+        }
+      });
+    }
   }
 };
 
