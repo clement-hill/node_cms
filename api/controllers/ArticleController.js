@@ -7,8 +7,15 @@
 
 module.exports = {
   find:function(req,res){
-    JpressContent.find({}).exec(function(error,list){
-      res.send(Rs.ok(list));
+    var search = req.param("search");
+    var findParam = search?JSON.parse(search):{};
+    JpressContent.find(findParam).exec(function(error,list){
+      if(error){
+        res.send(Rs.bad(""));
+      }else{
+        list || (list = []);
+        res.send(Rs.ok(list));
+      }
     });
   },
   add:function(req,res){
@@ -19,7 +26,6 @@ module.exports = {
         res.send(Rs.ok(""));
       }
     });
-
   },
   update:function(req,res){
     var opr = req.body;

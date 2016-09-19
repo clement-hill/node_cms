@@ -2,6 +2,14 @@ CONFIG = {
   SHOWMENU: true,
   VMCONTENT: void 0
 };
+function RS(res, callback) {
+  var body = res.body;
+  if (body.s == 0) {
+    callback(body.msg);
+  } else {
+    alert("error");
+  }
+};
 
 define(function(require, exports, module) {
   require('editor-config');

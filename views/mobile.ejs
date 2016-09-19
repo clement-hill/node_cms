@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>mobile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+</head>
+<body>
+<div class="mobile" id="mobile">
+</div>
+<style>
+  .mobile{
+    width:375px;
+    height: 500px;
+    border:3px solid #ddd;
+    margin:0 auto;
+  }
+</style>
+<script src="/js/vue.min.js" ></script>
+<script src="/js/vue-resource.js" ></script>
+<script>
+  var param = getParam();
+  var __mobile = new Vue({
+    el:".mobile",
+    data: {
+      data:{}
+    }
+  });
+  __mobile.$http.get("article",{params:{search:decodeURI(param.search)}}).then(function(res){
+    var body = res.body;
+    if (body.s == 0) {
+      var data = body.msg[0];
+      __mobile.$set("data",data);
+      document.getElementById("mobile").innerHTML = data.text;
+    } else {
+      alert("error");
+    }
+  });
+
+  function getParam(){
+    var obj = {};
+    location.search.substr(1).split("&").map(function(v){
+      var arr = v.split("=");
+      obj[arr[0]] = arr[1];
+    });
+    return obj;
+  };
+</script>
+</body>
+</html>

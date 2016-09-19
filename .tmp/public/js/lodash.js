@@ -1,11 +1,3 @@
-function RS(res, callback) {
-  var body = res.body;
-  if (body.s == 0) {
-    callback(body.msg);
-  } else {
-    alert("error");
-  }
-};
 
 
 

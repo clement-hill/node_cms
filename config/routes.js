@@ -32,10 +32,10 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view:"homepage"
-  },
+  '/': {view:"homepage"},
   'get /web/*.html':'WebController.index',
+  'post /file':'WebController.file',
+  'get /mobile':{view:"mobile",locals:{layout:false}},
 
   // web-article
   'get /article':'ArticleController.find',

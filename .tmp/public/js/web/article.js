@@ -34,13 +34,17 @@ CONFIG.article = function (component) {
       action_show_menu: function (val) {
         CONFIG.SHOWMENU = val;
       },
-      click_checkAll: function (e) {
+      //
+      click_btn_mobileWeb:function(one){
+        window.open('/mobile?search='+JSON.stringify({id:one.id}));
+      },
+      click_input_checkAll: function (e) {
         var $data = this.$data;
         $data.list.map(function (v) {
           v.checked = !$data.checkAllFlag;
         });
       },
-      click_opr:function(){
+      click_btn_opr:function(){
         var _this = this;
         var $data = _this.$data;
 
@@ -56,7 +60,7 @@ CONFIG.article = function (component) {
           });
         }
       },
-      dclick_show:function(one){
+      dclick_row:function(one){
         console.log("alert")
         CONFIG.__b_menu.click_menu_list({url:"article_add"},one);
       }
@@ -84,6 +88,7 @@ CONFIG.article_add = function (component,one) {
     methods: {
       http_post: function (data) {
         data.id = void 0;
+        //data.file = $("[name='file']").files;
         this.$http.post("article", data).then(function (res) {
           RS(res, function () {
             alert("ok");

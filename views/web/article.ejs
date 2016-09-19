@@ -21,7 +21,7 @@
         <option value="del">删除</option>
       </select>
     </div>
-    <span class="button btn-default" v-gesture:tap="click_opr(this,$event)">应用</span>
+    <span class="button btn-default" v-gesture:tap="click_btn_opr(this,$event)">应用</span>
 
     <div class="col col-10">
       <select class="form-control">
@@ -39,12 +39,13 @@
   <table class="table">
     <thead>
     <tr>
-      <th class="checkbox"><input name="dataItem" v-on:click="click_checkAll(this,$event)" type="checkbox" v-model="checkAllFlag"></th>
+      <th class="checkbox"><input name="dataItem" v-on:click="click_btn_checkAll(this,$event)" type="checkbox" v-model="checkAllFlag"></th>
       <th>标题</th>
       <th>作者</th>
       <th>分类</th>
       <th>专题</th>
       <th>发布时间</th>
+      <th width="120">操作</th>
     </tr>
     </thead>
     <!--<tr>-->
@@ -55,13 +56,14 @@
     <!--<td>5</td>-->
     <!--<td>6</td>-->
     <!--</tr>-->
-    <tr v-for="one in list" v-on:dblclick="dclick_show(one)">
+    <tr v-for="one in list" v-on:dblclick="dclick_row(one)">
       <td class="checkbox"><input name="dataItem" type="checkbox" v-model="one.checked" /></td>
       <td>{{one.title}}</td>
       <td>{{one.user_id}}</td>
-      <td>{{one.text}}</td>
+      <td>{{one.id}}</td>
       <td>{{one.moudle}}</td>
       <td >{{one.createdAt}}</td>
+      <td><span class="button btn-primary" v-on:click="click_btn_mobileWeb(one)">预览</span></td>
     </tr>
   </table>
 </div>
