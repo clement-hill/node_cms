@@ -1,5 +1,5 @@
 {
-  "name": "node-test",
+  "name": "node_cms",
   "private": true,
   "version": "0.0.0",
   "description": "a Sails application",
@@ -30,8 +30,8 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/zhuang/node-test.git"
+    "url": "https://github.com/clement-hill/node_cms.git"
   },
-  "author": "zhuang",
+  "author": "clement",
   "license": ""
 }
