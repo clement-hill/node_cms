@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/styles/importer.css" rel="stylesheet" />
+  <script src="/js/jquery.js" type="text/javascript"></script>
+</head>
+<body>
+
+<!-- head -->
+<% include head.ejs %>
+
+<div class="content">
+
+  <div class="menu">
+    <!-- menu -->
+    <% include menu.ejs %>
+  </div>
+
+  <div class="body" id="body">
+    <%-body %>
+  </div>
+</div>
+
+<!-- head -->
+<% include foot.ejs %>
+
+<script src="/js/require.js" data-main="/js/main" charset='utf-8' type="text/javascript"></script>
+
+</body>
+</html>

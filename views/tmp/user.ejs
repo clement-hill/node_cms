@@ -1,0 +1,88 @@
+<div class="box">
+  <div class="content-head">
+    <div class="content-title">用户信息</div>
+  </div>
+
+  <!--<div class="condition-box">-->
+
+  <!--<div class="fr">-->
+  <!--<input class="input" />-->
+  <!--<div class="btn btn-primary btn-xs onShowWeb">搜索</div>-->
+  <!--</div>-->
+  <!--</div>-->
+  <br/>
+  <div class="panel-box">
+    <div class="panel-title">
+      <div class="btn-group-xs fl">
+        <div class="btn btn-default btn-xs onAdd">增</div>
+        <div class="btn btn-default btn-xs onDel">删</div>
+        <div class="btn btn-default btn-xs onMod">改</div>
+      </div>
+    </div>
+    <div class="panel-row user_table table-fix">
+      <% tableName = 'tableUser' %>
+      <% include ../component/table.ejs %>
+    </div>
+  </div>
+</div>
+<style>
+  .box{
+    height: 100%;
+    padding:10px;
+    box-sizing: border-box;
+    overflow: scroll;
+  }
+  .condition-box{
+    width: 100%;
+    padding:10px 0;
+    display: inline-block;
+  }
+  .user_table.panel-row{
+    height: 350px;
+    padding:0;
+  }
+</style>
+<script>
+  $(function(){
+    $(".user_table").height(bodyHeight+"px");
+    //
+    var $table = $("#tableArticle");
+    CLICK("#user",{
+      onAdd:function(){
+        MENU("user/user_add");
+      },
+      onDel:function(){
+        var $table = $("#tableUser");
+        var sel = $table.table("getSelects");
+        if(sel.length<1){
+          alert("选择一行数据！");
+        }else{
+          var ids = [];
+          sel.map(function(v){
+            ids.push(v.id);
+          });
+          $.ajax({
+            url:"user/del",
+            type:"post",
+            data:JSON.stringify({ids:ids.join(",")}),
+            contentType:'application/json',
+            success:function(rs){
+              if(rs.s==0){
+                $table.table("refresh");
+              }
+            }
+          });
+        }
+      },
+      onMod:function(){
+        var $table = $("#tableUser");
+        var sel = $table.table("getSelects");
+        if(sel.length==1){
+          MENU("user/user_add","",{row:sel[0]});
+        }else{
+          alert("选择一行数据！");
+        }
+      }
+    });
+  });
+</script>

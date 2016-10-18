@@ -1,5 +1,5 @@
 {
-  "name": "product_pc-",
+  "name": "node-test",
   "private": true,
   "version": "0.0.0",
   "description": "a Sails application",
@@ -30,7 +30,7 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/zhuang/product_pc-.git"
+    "url": "git://github.com/zhuang/node-test.git"
   },
   "author": "zhuang",
   "license": ""

@@ -1,0 +1,8 @@
+
+STYLE:
+  onxxx 事件
+  tablexxx 表格
+  [name] 表单名
+  [val] 表单数据
+  [d-xxx] 数据
+

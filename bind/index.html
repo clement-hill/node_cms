@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+</head>
+<body>
+  <div class="dialog-box">
+  </div>
+  <style>
+    html,body{
+      margin:0;
+      height:0;
+      height: 100%;
+    }
+    .dialog{width: 0;height: 0;overflow:hidden;position:fixed; border: 1px solid #d8d8d8;}
+    .dialog.show{width: 100%;height: 100%;}
+    .dialog .dialog-body{width: 1px; height: 1px;margin:250px auto 0; transition: all 0.5s ease .2s; overflow: hidden;position: relative;background-color:#fff;}
+    .dialog.show .dialog-body{width: 400px; height: 200px; margin:150px auto 150px;}
+    .dialog .has-head .dialog-content{padding-top:40px;}
+    .dialog .has-foot .dialog-content{padding-bottom:40px;}
+    .dialog .dialog-head{width:100%;height:40px;position: absolute;top:0;background: #eaeaea; border-bottom: 1px solid #d8d8d8;}
+    .dialog .dialog-content{height:100%;box-sizing: border-box;}
+    .dialog .dialog-foot{width:100%;height:40px;line-height:40px;position: absolute;bottom:0;background: #eaeaea; border-top: 1px solid #d8d8d8;}
+    .dialog .mask{width: 100%;height:100%;display: hidden;background-color:rgba(243, 243, 243, 0.5);position: absolute;left:0;top:0;z-index: -1;}
+    .dialog.show .mask{display: block;}
+    .dialog .close{padding:0 15px;line-height:40px;font-size: 20px;float:right; cursor:pointer; transition: all 0.5s;}
+    .dialog .close:hover{transform:rotate(180deg);}
+    .dialog .title{padding:0 15px;line-height:40px;font-weight:500;}
+    .dialog .button{margin:4px 4px 4px 0;padding:7px 15px; line-height: 16px; cursor:pointer ;display: inline-block; border: 1px solid #d8d8d8;float:right;}
+    .dialog .button.primary{background-color: #68afea;border-color: #aec8ce;color: #fff;}
+  </style>
+  <script>
+
+    /**
+     * new Dialog("dialog",{
+     *  title:"测试",
+     *  width:'400px',
+     *  height:'200px',
+     *  foot:[{
+     *    title:"按钮",
+     *    onClick:function(){
+     *      alert(1)}
+     *    }]
+     * });
+     * */
+    var Dialog = function(selecter,cfg){
+      var _t = this;
+      _t.opts = cfg;
+      _t.opts.selecter = selecter;
+      _t.opts.eventList = {};
+      Dialog.create(_t.opts);
+      Dialog.event(_t.opts);
+      _t.opts._el.options = _t.opts;
+      return _t.opts;
+    };
+    Dialog.arr = [];
+    Dialog.create = function(o){
+      var _box = document.getElementsByClassName("dialog-box")[0];
+      var _el = document.createElement("div");
+      var arrHtml = [];
+      var zIndex = 100 + Dialog.arr.length * 10;
+      var style = (o.width?'width:'+o.width+';':'') + (o.height?'height:'+o.height+';':'');
+      _el.className = "dialog";
+      _el.setAttribute("id", o.selecter);
+      arrHtml.push('<div class="dialog-body '+(o.title?" has-head":"")+(o.foot?"has-foot":"")+'" style="z-index:'+(zIndex+1)+';'+ style + ';">');
+      arrHtml.push(Dialog.createTitle(o));
+      arrHtml.push(Dialog.createContent(o));
+      arrHtml.push(Dialog.createFoot(o));
+      arrHtml.push('</div>');
+      arrHtml.push('<div class="mask" style="z-index:'+zIndex+';"></div>');
+      _el.innerHTML = arrHtml.join('\n');
+      _box.appendChild(_el);
+      //
+      o._el = _el;
+      Dialog.arr.push(o.selecter);
+    };
+    Dialog.createTitle = function(o){
+      var arr = [];
+      if(o.title){
+        arr.push('<div class="dialog-head">');
+        arr.push('<span class="title">'+ o.title +'</span>');
+        arr.push('<span class="close" event="onClose">x</span>');
+        arr.push('</div>');
+        return arr.join('\n');
+      }else{
+        return "";
+      }
+    };
+    Dialog.createContent = function(o){
+      return '<div class="dialog-content">123</div>';
+    };
+    Dialog.createFoot = function(o){
+      var arr = [];
+      if(o.foot && o.foot.length){
+        arr.push('<div class="dialog-foot">');
+        o.foot.map(function(v,i){
+          var eventName = 'onClickButton'+i;
+          arr.push('<span class="button '+ (v.cls||'') +'" event="'+eventName+'">'+ v.title +'</span>');
+          o.eventList[eventName] = v.onClick;
+        });
+        arr.push('</div>');
+        return arr.join('\n');
+      }else{
+        return "";
+      }
+    };
+    Dialog.event = function(o){
+      o.onOpen = function(){
+        o._el.className += " show";
+      };
+      o.onClose = function(){
+        o._el.className = o._el.className.replace("show","").trim();
+      };
+      o.onRemove = function(){
+        o._el.remove();
+        Dialog.arr.pop();// 按层级展示，直接删除最后一个
+      };
+      //
+      o.eventList["onClose"] = function(){o.onClose();};
+      //
+      o._el.onclick = function(e){
+        var _el = e.target.getAttribute("event")? e.target : (e.target.closest("[event]"));
+        var eventName = e.target.getAttribute("event");
+        o.eventList[eventName] && o.eventList[eventName].call(_el,e,o);
+      };
+    };
+    // extend
+    Dialog.confirm = function(o,cb){
+      var selecter = Math.random().toString(18).substr(2);
+      new Dialog(selecter,{
+        title: o.title || "提示",
+        content: o.content,
+        foot:[
+          {title:"确定",cls:"primary",onClick:function(e,opts){opts.onRemove();cb(1);}},
+          {title:"取消",onClick:function(e,opts){opts.onRemove();cb(0);}}
+        ]
+      }).onOpen();
+    };
+    Dialog.alert = function(o){
+      var selecter = Math.random().toString(18).substr(2);
+      new Dialog(selecter,{
+        title: o.title || "提示",
+        content: o.content,
+        foot:[
+          {title:"确定",cls:"primary",onClick:function(e,opts){opts.onRemove();}},
+        ]
+      }).onOpen();
+    };
+//    new Dialog("dialog",{title:"测试"}).onOpen();
+  </script>
+  </body>
+</html>

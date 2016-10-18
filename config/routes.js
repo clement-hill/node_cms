@@ -31,25 +31,20 @@ module.exports.routes = {
   * `assets` directory)                                                      *
   *                                                                          *
   ***************************************************************************/
-
-  '/': {view:"homepage"},
-  'get /web/*.html':'WebController.index',
+  '/':'WebController.web',
+  'get /login':{view:"login",locals:{layout:false,msg:""}},
+  'get /**.htm':'WebController.web',
+  'get /**.tmp':'WebController.tmp',
+  // action
+  'delete /*':'WebController.action',
+  'put /*':'WebController.action',
+  'post /*':'WebController.action',
+  // 文件上传
   'post /file':'WebController.file',
-  'get /mobile':{view:"mobile",locals:{layout:false}},
+  // 前台模板
+  'get /mobile':'WebController.mobile',
+  'get /web':{view:"web",locals:{layout:false}}
 
-  // web-article
-  'get /article':'ArticleController.find',
-  'post /article':'ArticleController.add',
-  'put /article':'ArticleController.update',
-  'delete /article':'ArticleController.del',
-
-
-
-  // test
-  '/test': {
-    view: 'test',
-    locals: {layout: false}
-  }
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

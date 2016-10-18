@@ -1,0 +1,88 @@
+<div class="box">
+  <div class="content-head">
+    <div class="content-title">所有文章</div>
+  </div>
+
+  <!--<div class="condition-box">-->
+
+    <!--<div class="fr">-->
+      <!--<input class="input" />-->
+      <!--<div class="btn btn-primary btn-xs onShowWeb">搜索</div>-->
+    <!--</div>-->
+  <!--</div>-->
+  <br/>
+  <div class="panel-box">
+    <div class="panel-title">
+      <div class="btn-group-xs fl">
+        <div class="btn btn-default btn-xs onAdd">增</div>
+        <div class="btn btn-default btn-xs onDel">删</div>
+        <div class="btn btn-default btn-xs onMod">改</div>
+      </div>
+    </div>
+    <div class="panel-row article_table table-fix">
+      <% tableName = 'tableArticle' %>
+      <% include ../component/table.ejs %>
+    </div>
+  </div>
+</div>
+<style>
+  .box{
+    height: 100%;
+    padding:10px;
+    box-sizing: border-box;
+    overflow: scroll;
+  }
+  .condition-box{
+    width: 100%;
+    padding:10px 0;
+    display: inline-block;
+  }
+  .article_table.panel-row{
+    height: 350px;
+    padding: 0;
+  }
+</style>
+<script>
+  $(function(){
+    $(".article_table").height(bodyHeight+"px");
+    //
+    var $table = $("#tableArticle");
+    CLICK("#article",{
+      onAdd:function(){
+        MENU("article/article_add");
+      },
+      onDel:function(){
+        var $table = $("#tableArticle");
+        var sel = $table.table("getSelects");
+        if(sel.length<1){
+          luck.alert({content:"选择一条数据！"});
+        }else{
+          var ids = [];
+          sel.map(function(v){
+            ids.push(v.id);
+          });
+          $.ajax({
+            url:"article/del",
+            type:"post",
+            data:JSON.stringify({ids:ids.join(",")}),
+            contentType:'application/json',
+            success:function(rs){
+              if(rs.s==0){
+                $table.table("refresh");
+              }
+            }
+          });
+        }
+      },
+      onMod:function(){
+        var $table = $("#tableArticle");
+        var sel = $table.table("getSelects");
+        if(sel.length==1){
+          MENU("article/article_add","",{row:sel[0]});
+        }else{
+          luck.alert({content:"选择一条数据！"});
+        }
+      }
+    });
+  });
+</script>

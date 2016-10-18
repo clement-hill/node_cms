@@ -1,0 +1,185 @@
+<div class="box">
+  <div class="content-head">
+    <div class="content-title">撰写文章</div>
+  </div>
+
+  <div class="tab">
+    <div class="tab-title">
+      <span d-title="base" class="active">基础选项</span>
+      <span d-title="temp">模板设置</span>
+    </div>
+    <div class="tab-content">
+      <div d-content="base"  class="active">
+        <div class="panel-box">
+          <div class="panel-row">
+            <div>
+                <div class="form-group">
+                  <label for="title">标题</label>
+                  <input type="text" class="form-control input-sm" name="title" id="title" placeholder="标题" />
+                  <input type="text" name="id" hidden/>
+                </div>
+              </div>
+              <br/>
+              <div class="article_add">
+                <script id="articleEditor" type="text/plain"></script>
+              </div>
+              <div class="box_group btn-group-xs">
+                <div class="btn btn-default btn-xs onShowMobile">手机预览</div>
+                <div class="btn btn-default btn-xs onShowWeb">页面预览</div>
+              </div>
+            </div>
+          <div class="panel-title">
+            <div class="btn btn-primary btn-xs onArticleSave">保存</div>
+          </div>
+        </div>
+      </div>
+      <div d-content="temp">
+        <div class="form-group">
+          <label for="title">类型 : </label>
+          <div  class="auto col-4">
+            <input type="checkbox" class="" name="checkbox"/>新闻
+            <input type="checkbox" class="" name="checkbox"/>音乐
+            <input type="checkbox" class="" name="checkbox"/>娱乐
+            <input type="checkbox" class="" name="checkbox"/>广告
+            <input type="checkbox" class="" name="checkbox"/>设置
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="title">类型2 : </label>
+          <div class="col-4">
+            <input type="radio" class="" name="checkbox"/>新闻
+            <input type="radio" class="" name="checkbox"/>音乐
+            <input type="radio" class="" name="checkbox"/>娱乐
+            <input type="radio" class="" name="checkbox"/>广告
+            <input type="radio" class="" name="checkbox"/>设置
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="title">text : </label>
+          <div class="col-4">
+            <input type="text" class="form-control" name="checkbox"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="title">日期 : </label>
+          <div class="col-4">
+            <input class="form-control date" name="checkbox"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="title">日期 : </label>
+          <div class="col-4">
+            <div class="form-box">
+              <input class="form-control date" name="checkbox"/>
+              <span class="fa fa-calendar"></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="title">下拉 : </label>
+          <div class="col-4">
+            <select class="form-control">
+              <option>value</option>
+              <option>value1</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="">textarea : </label>
+          <div class="col-4">
+            <textarea class="form-control"></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="">textarea : </label>
+          <div class="col-4">
+            <textarea class="form-control"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .box{
+    height: inherit;
+    padding:10px;
+    box-sizing: border-box;
+    overflow: scroll;
+  }
+  .title-box{
+    overflow: auto;
+  }
+  .box_group{
+    padding:5px 0;
+  }
+  .form-group{
+    padding:5px;
+  }
+  .form-group label{
+    width: 150px;
+    padding-right:10px;
+  }
+</style>
+<script>
+  $(function(){
+    UE.delEditor("articleEditor");
+    var articleEditor = UE.getEditor('articleEditor',{
+      imageUrl: "/servlet/UploadServlet", //图片上传提交后台对应的地址
+      imagePath: "/images/",  //图片在服务器上的存储目录
+      imageFieldName: "upload"  //后台对应接收image的参数名
+    });
+    $("#article_add .date").fdatepicker({
+      language: 'sk'
+    });
+
+    // click
+    CLICK('#article_add',{
+      onArticleSave:function(){
+        var row = $("#article_add").form("get");
+        var type,url;
+        row.content = articleEditor.getContent();
+        if(row.id){
+          url = '/article/put';
+          type = 'put';
+        }else{
+          url = '/article/post';
+          type = 'post';
+        }
+        $.ajax({
+          url:url,
+          type:type,
+          data:JSON.stringify(row),
+          contentType:'application/json',
+          success:function(rs){
+            luck.alert({content:JSON.stringify(rs)});
+          }
+        });
+      },
+      onShowMobile:function(){
+        sessionStorage.setItem("articleEditor",articleEditor.getContent());
+        window.open("/mobile");
+      },
+      onShowWeb:function(){
+        sessionStorage.setItem("articleEditor",articleEditor.getContent());
+        window.open("/web");
+      }
+    });
+    // on
+    ON("#article_add",{
+      "after":function(event,data){
+        //
+        if(data && data.row){
+          var content = data.row.content || "";
+          $("#article_add").form("set",data.row);
+          articleEditor.ready(function(){
+            articleEditor.setContent(content);
+          });
+        }
+      }
+    });
+  })
+
+</script>

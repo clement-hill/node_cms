@@ -1,3 +1,3 @@
-# product_pc-
+# node-test
 
 a [Sails](http://sailsjs.org) application

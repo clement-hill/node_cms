@@ -1,0 +1,79 @@
+<div class="box">
+  <div class="content-head">
+    <div class="content-title">撰写文章</div>
+  </div>
+  <div>
+    <div class="box_group btn-group-xs">
+      <div class="btn btn-primary btn-xs onArticleSave">保存</div>
+    </div>
+    <div class="form-group">
+      <label for="name">姓名</label>
+      <input type="text" class="form-control input-sm" name="name" id="name" placeholder="姓名" />
+      <input type="text" name="id" hidden/>
+    </div>
+    <div class="form-group">
+      <label for="password">密码</label>
+      <input type="text" class="form-control input-sm" name="password" id="password" placeholder="密码" />
+    </div>
+  </div>
+  <br/>
+</div>
+
+<style>
+  .box{
+    height: inherit;
+    padding:10px;
+    box-sizing: border-box;
+    overflow: scroll;
+  }
+  .title-box{
+    overflow: auto;
+  }
+  .box_group{
+    padding:5px 0;
+  }
+</style>
+<script>
+  $(function(){
+    // click
+    CLICK('#user_add',{
+      onArticleSave:function(){
+        var row = $("#user_add").form("get");
+        var type,url;
+        if(row.id){
+          url = '/user/put';
+          type = 'put';
+        }else{
+          url = '/user/post';
+          type = 'post';
+        }
+        $.ajax({
+          url:url,
+          type:type,
+          data:JSON.stringify(row),
+          contentType:'application/json',
+          success:function(rs){
+            alert(JSON.stringify(rs));
+          }
+        });
+      },
+      onShowMobile:function(){
+        sessionStorage.setItem("articleEditor",articleEditor.getContent());
+        window.open("/mobile");
+      },
+      onShowWeb:function(){
+        sessionStorage.setItem("articleEditor",articleEditor.getContent());
+        window.open("/web");
+      }
+    });
+    // on
+    ON("#user_add",{
+      "after":function(event,data){
+        if(data && data.row){
+          var content = data.row.content || "";
+          $("#user_add").form("set",data.row);
+        }
+      }
+    });
+  })
+</script>

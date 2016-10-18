@@ -1,0 +1,154 @@
+<%
+table = $data[tableName];
+%>
+<% if(table){ %>
+<div class="table-normal" id="<%=tableName%>" <%=table.isPage?"page":"" %>>
+  <div class="table-box">
+    <div class="table-head">
+      <%-(function(){
+        var arr = [];
+        var _columns = table.columns;
+        arr.push('<table cellspacing="0" cellpadding="0">');
+        arr.push("<tr>");
+        arr.push('<td width="24"><input type="checkbox" class="checkall"/></td>');
+        _columns.map(function(v){
+          var isHidden = v.hidden?"hidden":"";
+          var style = v.style || (v.style = {});
+          var width = v.style.width || (v.style.width = "150px");
+          var styleStr = param(v.style).replace(/\&/g,";");
+          arr.push('<td '+isHidden+'><div style="'+styleStr+'">'+ v.text +'</div></td>');
+        });
+        arr.push('<td style="width:100%;"></td>');
+        arr.push("</tr>");
+        arr.push("</table>");
+        return arr.join("\n");
+      })() %>
+    </div>
+    <div class="table-body">
+      <%-(function(){
+        if(!table.pageCount){
+          return '<div class="table-error">加载数据失败！！</div>';
+        }
+        //
+        var arr = [];
+        var _columns = table.columns;
+        var _datas = table.data;
+        arr.push('<table cellspacing="0" cellpadding="0">');
+        _datas.map(function(one){
+          arr.push("<tr>");
+          arr.push('<td width="24"><input type="checkbox" class="checkitem"/></div>');
+          _columns.map(function(v){
+            var isHidden = v.hidden?"hidden":"";
+            var baseVal = encodeURIComponent(one[v.name]);
+            var val = v.template?v.template(one[v.name]):one[v.name];
+            var styleStr = param(v.style).replace(/\&/g,";");
+            arr.push('<td '+isHidden+'><div style="'+styleStr+'" name="'+ v.name +'" val="'+ baseVal +'">'+ val +'</div></td>');
+          });
+          arr.push('<td style="width:100%;"></td>');
+          arr.push("</tr>");
+        });
+        arr.push("</table>");
+        return arr.join("\n");
+      })() %>
+    </div>
+  </div>
+  <div class="table-page">
+    <%-(function(){
+      if(!table.pageCount){
+        return "<b>&nbsp;</b>";
+      }
+      //
+      var arr = [];
+      var page = table.page;
+      var pageSize = table.pageSize;
+      var pageCount = table.pageCount;
+      var size = table.size;
+      var start = table.pageStart;
+      var end = table.pageEnd;
+      end>size && (end = size) ;
+      arr.push('<span class="'+(start == page?'active':'')+'" d-page="'+start+'">&lt;&lt;</span>');
+      for(;start<end+1;){
+        var active = start == page?'active':'';
+        arr.push('<span class="'+active+'" d-page="'+start+'">'+start+'</span>');
+        start++;
+      }
+      arr.push('<span class="'+(pageCount == page?'active':'')+'" d-page="'+pageCount+'">&gt;&gt;</span>');
+      return  arr.join("\n");
+    }())%>
+  </div>
+</div>
+<% } %>
+<script>
+  $(function(){
+    var tableName = '<%=tableName%>';
+    var $table = $('#'+tableName);
+    var url = "<%=table.url || "" %>.tmp";
+    var isCheckOne = '<%=table.isCheckOne || "" %>';
+    var $box = $table.find('.table-box');
+    var $head = $table.find('.table-head');
+    var $body = $table.find('.table-body');
+    var $page = $table.find('.table-page');
+    //
+    var page = '<%=table.page %>';
+    var pageSize = '<%=table.pageSize %>';
+    $box.scroll(function(){
+      $head.scrollLeft(this.scrollLeft);
+    });
+//    if($head.find("table").width()<$table.width()){
+//      $head.find("table").width("100%");
+//      $body.find("table").width("100%");
+//    }
+    var options = {
+      getSelects:function(){
+        var rs = [];
+        $body.find("tr").has(".checkitem:checked").each(function(i,v){
+          var $t = $(this);
+          rs.push($t.form("get"));
+        });
+        return rs;
+      },
+      refresh:function(){
+        $.ajax({
+          url:url+"?"+ $.param({tmp:"component/table",tableName:tableName,page:page,pageSize:pageSize}),
+          type:"get",
+          success:function(rs){
+            $table.parent().html(rs);
+          }
+        });
+        return $table;
+      }
+    };
+    $table.data("options",options);
+    // head
+    $head.on("click.checkall","input.checkall",function(){
+      $table.find(".table-body .checkitem").prop("checked",this.checked);
+    });
+    // page
+    $page.on("click.page","span",function(){
+      var cls = this.className;
+      var page = this.getAttribute("d-page");
+      var pageSize = '<%=table.pageSize %>';
+      if(!cls){
+        <!--MENU('',{page:page,pageSize:pageSize});-->
+        $.ajax({
+          url:url+"?"+ $.param({tmp:"component/table",tableName:tableName,page:page,pageSize:pageSize}),
+          type:"get",
+          success:function(rs){
+            $table.parent().html(rs);
+          }
+        });
+      }
+    });
+    $body.on("dblclick.row","tr",function(){
+      var _this = $(this);
+      var $check = _this.find(".checkitem");
+      if(isCheckOne){
+        _this.siblings().find(".checkitem").prop("checked",false);
+      }
+      $check.prop("checked",!$check[0].checked);
+    });
+
+
+  });
+</script>
+

@@ -1,0 +1,50 @@
+<div class="tab category_tab">
+  <div class="tab-title">
+    <span d-title="all" class="active">全部</span>
+    <span d-title="sys">系统</span>
+    <span d-title="sel">独立</span>
+    <span d-title="one">单页</span>
+  </div>
+  <div class="tab-content">
+    <div d-content="all"  class="active">
+      <div class="panel-box">
+        <div class="panel-row">
+          <div class="block">
+            <div class="dropdown">
+              <a class="btn btn-primary btn-xs">
+                添加栏目
+                <i class="fa fa-angle-down"></i>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="#">xxx</a></li>
+                <li><a href="#">xxx</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="btn btn-default btn-xs ">展开全部</div>
+          <div class="btn btn-default btn-xs ">关闭全部</div>
+        </div>
+        <div class="panel-row article_table table-fix">
+          <% tableName = 'tableArticleCategory' %>
+          <% include ../component/table-tree.ejs %>
+        </div>
+      </div>
+    </div>
+    <div d-content="sys">
+    </div>
+    <div d-content="sel">
+    </div>
+    <div d-content="one">
+    </div>
+  </div>
+</div>
+<style>
+  .category_tab{
+    height: 100%;
+    padding:10px;
+    box-sizing: border-box;
+  }
+  .category_tab .tab-content{
+    padding-bottom: 60px;
+  }
+</style>

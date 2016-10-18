@@ -1,20 +1,55 @@
-<section class="b_menu {{CONFIG.SHOWMENU?'':'active'}}">
-  <ul class="sidebar-menu">
-    <li v-for="one in list" v-gesture:tap.stop.prevent="click_menu_list(one)" >
-      <a v-bind:class="active==one.id?'active':''">
-        <i class="fa" v-bind:class="one.icon"></i>
-        <span>{{one.text}}</span>
-        <i class="fa pull-right {{showIndex==one.id?'fa-angle-down':'fa-angle-left'}}" v-show="one.children.length"></i>
+<%
+  menu = [{
+    id: 1 , url:"" , active:"active"  , text: "功能", icon: "fa-file-text", children: [
+      {id: 0, url: "article/article_add", text: "内容增加", icon: ""},
+      {id: 10, url: "file/file_upload", text: "文件上传", icon: ""}
+    ]
+  },{
+    id: 5 , url:"" , text: "用户", icon: "fa-file-text", children: [
+      {id: 50, url: "user/user", text: "所有用户", icon: ""},
+      {id: 51, url: "user/user_add", text: "添加", icon: ""},
+      {id: 52, url: "user/user_info", text: "我的资料", icon: ""}
+    ]
+  },{
+    id: 1 , url:"" , text: "网站内容", icon: "fa-file-text", children: [
+      {id: 10, url: "article/article", text: "内容管理", icon: ""},
+      {id: 11, url: "article/article_category", text: "栏目管理", icon: ""},
+      {id: 12, url: "article/article_category1", text: "分类", icon: ""},
+      {id: 13, url: "article/article_special", text: "专题", icon: ""},
+      {id: 14, url: "article/article_tip", text: "标签", icon: ""},
+      {id: 15, url: "article/article_opinion", text: "评论", icon: ""}
+    ]
+  }];
+%>
+<section id="b_menu" class="b-menu">
+  <div>
+    <br/>
+    <div>※</div>
+    <br/>
+  </div>
+  <ul class="sidebar-menu onMenuClick">
+    <% menu.forEach(function(one){ %>
+    <li class="<%=one.active||'' %>">
+      <a href="javascript:void(0);" d-url="<%=one.url %>">
+        <i class="fa <%=one.icon %>"></i>
+        <span><%=one.text %></span>
+        <% if(one.children && one.children.length){ %><i class="fa pull-right fa-angle-right t-ease"></i><% } %>
       </a>
-      <ul v-bind:class="showIndex==one.id?'':'hidden'">
-        <li v-for="child in one.children" v-gesture:tap.stop.prevent="click_menu_list(child)">
-          <a v-bind:class="active==child.id?'active':''">
-            <i class="fa" v-bind:class="child.icon"></i>
-            <span>{{child.text}}</span>
-            <i class="fa fa-angle-left pull-right" v-show="child.children.length"></i>
+      <% if(one.children && one.children.length){ %>
+      <ul>
+        <% one.children.forEach(function(sub){ %>
+        <li>
+          <a href="javascript:void(0);" d-url="<%=sub.url %>">
+            <i class="fa <%=sub.icon %>"></i>
+            <span><%=sub.text %></span>
+            <i class="fa"></i>
           </a>
         </li>
+        <% }) %>
       </ul>
+      <% } %>
     </li>
+    <% }) %>
   </ul>
+  <br/>
 </section>

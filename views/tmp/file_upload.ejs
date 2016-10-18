@@ -1,0 +1,30 @@
+<div class="file_upload">
+  <form action="file/upload" enctype="multipart/form-data" method="post" >
+    <div class="form-group">
+      <label for="title">标题</label>
+      <input type="text" class="form-control input-sm" name="title" id="title" placeholder="标题" />
+    </div>
+    <div class="form-group">
+      <label for="title">文件名</label>
+      <input type="text" class="form-control input-sm" name="title" id="title" placeholder="标题" />
+    </div>
+    <div class="form-group">
+      <label for="title">事件</label>
+      <input type="date" class="form-control input-sm" name="date" id="date" placeholder="日期" />
+    </div>
+    <div class="form-group">
+      <label for="title"></label>
+      <input type="file" name="avatar" multiple="multiple"/>
+    </div>
+    <br/>
+    <div>
+      <div class="btn btn-xs onFileSave">取消</div>
+      <button class="btn btn-primary btn-xs onFileSave" type="submit">保存</button>
+    </div>
+  </form>
+</div>
+<style>
+  .file_upload{
+    padding:10px;
+  }
+</style>

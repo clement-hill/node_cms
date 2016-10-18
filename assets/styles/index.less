@@ -1,0 +1,102 @@
+html,body{
+  margin:0;
+  padding:0;
+  height: 100%;
+}
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #333333;
+  background-color: #ffffff;
+}
+
+@headHeight : 50px;
+@footHeight : 0;
+@menuWidth : 230px;
+
+.head{
+  width: 100%;
+  height:@headHeight;
+  line-height: @headHeight;
+  color:#fff;
+  position: fixed;
+  left:0;
+  top:0;
+  z-index: 8;
+  background-color: #6d6d6d;
+  box-shadow: 0px 2px 4px black;
+}
+
+.content{
+  width: 100%;
+  height: 100%;
+  padding:@headHeight 0 @footHeight;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.content .menu{
+  width: @menuWidth;
+  height: inherit;
+  padding: @headHeight 0 @footHeight;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: absolute;
+  left:0;
+  top:0;
+  bottom:0;
+
+  .b-menu{
+    height: 100%;
+    overflow: scroll;
+    border-right: 1px solid #e5e5e5;
+
+    li{
+      >ul{
+        display: none;
+      }
+
+      .icon-angle-left{
+        transition: all .4s;
+        -moz-transition: all .4s; /* Firefox 4 */
+        -webkit-transition: all .4s; /* Safari 和 Chrome */
+        -o-transition: all .4s; /* Opera */
+      }
+
+      &.active{
+        >ul{
+          display: block;
+        }
+
+        .fa-angle-right {
+          transform:rotate(90deg);
+          -ms-transform:rotate(90deg); 	/* IE 9 */
+          -moz-transform:rotate(90deg); 	/* Firefox */
+          -webkit-transform:rotate(90deg); /* Safari 和 Chrome */
+          -o-transform:rotate(90deg); 	/* Opera */
+        }
+      }
+    }
+  }
+}
+
+.content .body{
+  height: inherit;
+  padding-left: 230px;
+  background-color: #fbfbfb;
+
+  >div{
+    height: inherit;
+  }
+}
+
+.foot{
+  width: 100%;
+  height: @footHeight;
+  line-height: @footHeight;
+  background-color: #6d6d6d;
+  color:#fff;
+  position: fixed;
+  bottom:0;
+  z-index: 900;
+}
